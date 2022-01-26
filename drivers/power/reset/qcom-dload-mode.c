@@ -276,8 +276,7 @@ static int qcom_dload_reboot(struct notifier_block *this, unsigned long event,
 	pr_debug("%s : cmd : %s\n", __func__, cmd);		/* CONFIG_SEC_DEBUG */
 
 	/* Clean shutdown, disable dump mode to allow normal restart */
-	if (!poweroff->in_panic)
-		set_download_mode(QCOM_DOWNLOAD_NODUMP);
+	set_download_mode(QCOM_DOWNLOAD_NODUMP);
 
 #if !IS_ENABLED(CONFIG_SEC_DEBUG)
 	if (cmd) {
@@ -288,7 +287,7 @@ static int qcom_dload_reboot(struct notifier_block *this, unsigned long event,
 	}
 #endif
 
-	if (current_download_mode != QCOM_DOWNLOAD_NODUMP)
+	if (poweroff->in_panic)
 		reboot_mode = REBOOT_WARM;
 	else
 		qcom_scm_disable_sdi();
